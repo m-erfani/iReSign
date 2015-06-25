@@ -581,6 +581,18 @@ static NSString *kiTunesMetadataFileName            = @"iTunesMetadata";
         
         NSLog(@"Dest: %@",destinationPath);
         
+        //Remove entitlements.plist from the workingPath folder
+        NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:workingPath error:nil];
+        NSError *error;
+        NSString *file = workingPath;
+        for (file in dirContents) {
+            if (![[file pathExtension] isEqualToString:@""]) {
+                BOOL success = [[NSFileManager defaultManager] removeItemAtPath:[workingPath stringByAppendingPathComponent:file] error:&error];
+                if (!success) NSLog(@"Error: %@", [error localizedDescription]);
+                break;
+            }
+        }
+
         zipTask = [[NSTask alloc] init];
         [zipTask setLaunchPath:@"/usr/bin/zip"];
         [zipTask setCurrentDirectoryPath:workingPath];
